@@ -174,5 +174,5 @@ private:
 };
 
 
-QTEST_MAIN(ProxyTests)
+QTEST_APPLESS_MAIN(ProxyTests)
 #include "proxytests.moc"
