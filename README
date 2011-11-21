@@ -1,0 +1,39 @@
+QSignalProxy - Proxy functions for Qt Signal/Slot connections
+-------------------------------------------------------------
+
+QSignalProxy is a utility class for Qt that allows you to establish a
+normal signal/slot or signal/signal with an additional proxy function.
+The proxy function will be invoked after the signal is emitted with the
+signal parameters, and may also a value that will be passed to the slot.
+The proxy function doesn't need to be a signal or slot -  you can simply
+pass an ordinary function pointer.
+
+This class uses a small part of type_traits from boost for template
+introspection. In theory, the necessary pieces could be placed directly
+into qsignalproxyfunctions.h if you really want to.
+
+NOTE: If you want to use custom types to your proxy functions, you
+have to register them using Q_DECLARE_METATYPE(Type) first. Otherwise,
+you'll get template error messages like
+> "error: ‘qt_metatype_id’ is not a member of ‘QMetaTypeId<Type>’"
+
+Here's a short example that connects a QSlider and a QDoubleSpinBox. The
+QSlider can only handle integers, so it will work with a multiplication
+factor of 10 for increased precision.
+
+	// Proxy functions
+	static int mul10(double v) { return int(v * 10); }
+	static double div10(int i) { return double(i) / 10; }
+
+	...
+
+	QSlider slider;
+	QDoubleSpinBox spinBox;
+	QSignalProxy proxy;
+	proxy.connect(&slider, SIGNAL(valueChanged(int)), &div10, &spinBox, SLOT(setValue(double)));
+	proxy.connect(&spinBox, SIGNAL(valueChanged(double)), &mul10, &slider, SLOT(setValue(int)));
+
+
+QSignalProxy is currently mostly a proof-of-concept and contains
+implementations for function pointers only and limits the number of
+arguments to 5. If you want more, take a look at Boost or C++11.

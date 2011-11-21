@@ -1,0 +1,6 @@
+*.o
+*.moc
+.*.swp
+*~
+Makefile
+qsignalproxy
