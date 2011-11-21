@@ -31,13 +31,13 @@
 #include <boost/type_traits/remove_reference.hpp>
 
 
-#define RAW_TYPE(T) typename boost::remove_const<typename boost::remove_reference<T>::type>::type
+#define _QSP_RAW_TYPE(T) typename boost::remove_const<typename boost::remove_reference<T>::type>::type
 
 namespace QSignalProxyFunctions
 {
 
 // Helper functions
-template <typename T> inline const char *rawTypeName() { return QMetaType::typeName(qMetaTypeId<RAW_TYPE(T)>()); }
+template <typename T> inline const char *rawTypeName() { return QMetaType::typeName(qMetaTypeId<_QSP_RAW_TYPE(T)>()); }
 template <> inline const char *rawTypeName<void>() { return "void"; }
 
 // Returns a type name string using qMetaTypeId<T>()
@@ -78,7 +78,7 @@ template <typename T, typename F> struct FPSignature<0, T, F> {
 template <typename T, typename F> struct FPCall<0, T, F> {
 	template <typename FP> static inline void call(FP f, void **r, void **) {
 		typename F::result_type v = (*f)();
-		*r = QMetaType::construct(qMetaTypeId<RAW_TYPE(typename F::result_type)>(), &v);
+		*r = QMetaType::construct(qMetaTypeId<_QSP_RAW_TYPE(typename F::result_type)>(), &v);
 	}
 };
 template <typename F> struct FPCall<0, void, F> {
@@ -90,13 +90,13 @@ template <typename T, typename F> struct FPSignature<1, T, F> {
 };
 template <typename T, typename F> struct FPCall<1, T, F> {
 	template <typename FP> static inline void call(FP f, void **r, void **a) {
-		typename F::result_type v = (*f)(*reinterpret_cast<RAW_TYPE(typename F::arg1_type) *>(a[1]));
-		*r = QMetaType::construct(qMetaTypeId<RAW_TYPE(typename F::result_type)>(), &v);
+		typename F::result_type v = (*f)(*reinterpret_cast<_QSP_RAW_TYPE(typename F::arg1_type) *>(a[1]));
+		*r = QMetaType::construct(qMetaTypeId<_QSP_RAW_TYPE(typename F::result_type)>(), &v);
 	}
 };
 template <typename F> struct FPCall<1, void, F> {
 	template <typename FP> static inline void call(FP f, void **, void **a) {
-		(*f)(*reinterpret_cast<RAW_TYPE(typename F::arg1_type) *>(a[1]));
+		(*f)(*reinterpret_cast<_QSP_RAW_TYPE(typename F::arg1_type) *>(a[1]));
 	}
 };
 
@@ -106,16 +106,16 @@ template <typename T, typename F> struct FPSignature<2, T, F> {
 template <typename T, typename F> struct FPCall<2, T, F> {
 	template <typename FP> static inline void call(FP f, void **r, void **a) {
 		typename F::result_type v = (*f)(
-			*reinterpret_cast<RAW_TYPE(typename F::arg1_type) *>(a[1]),
-			*reinterpret_cast<RAW_TYPE(typename F::arg2_type) *>(a[2])
+			*reinterpret_cast<_QSP_RAW_TYPE(typename F::arg1_type) *>(a[1]),
+			*reinterpret_cast<_QSP_RAW_TYPE(typename F::arg2_type) *>(a[2])
 		);
-		*r = QMetaType::construct(qMetaTypeId<RAW_TYPE(typename F::result_type)>(), &v);
+		*r = QMetaType::construct(qMetaTypeId<_QSP_RAW_TYPE(typename F::result_type)>(), &v);
 	}
 };
 template <typename F> struct FPCall<2, void, F> {
 	template <typename FP> static inline void call(FP f, void **, void **a) {
-		(*f)(*reinterpret_cast<RAW_TYPE(typename F::arg1_type) *>(a[1]),
-			 *reinterpret_cast<RAW_TYPE(typename F::arg2_type) *>(a[2])
+		(*f)(*reinterpret_cast<_QSP_RAW_TYPE(typename F::arg1_type) *>(a[1]),
+			 *reinterpret_cast<_QSP_RAW_TYPE(typename F::arg2_type) *>(a[2])
 		);
 	}
 };
@@ -126,18 +126,18 @@ template <typename T, typename F> struct FPSignature<3, T, F> {
 template <typename T, typename F> struct FPCall<3, T, F> {
 	template <typename FP> static inline void call(FP f, void **r, void **a) {
 		typename F::result_type v = (*f)(
-			*reinterpret_cast<RAW_TYPE(typename F::arg1_type) *>(a[1]),
-			*reinterpret_cast<RAW_TYPE(typename F::arg2_type) *>(a[2]),
-			*reinterpret_cast<RAW_TYPE(typename F::arg3_type) *>(a[3])
+			*reinterpret_cast<_QSP_RAW_TYPE(typename F::arg1_type) *>(a[1]),
+			*reinterpret_cast<_QSP_RAW_TYPE(typename F::arg2_type) *>(a[2]),
+			*reinterpret_cast<_QSP_RAW_TYPE(typename F::arg3_type) *>(a[3])
 		);
-		*r = QMetaType::construct(qMetaTypeId<RAW_TYPE(typename F::result_type)>(), &v);
+		*r = QMetaType::construct(qMetaTypeId<_QSP_RAW_TYPE(typename F::result_type)>(), &v);
 	}
 };
 template <typename F> struct FPCall<3, void, F> {
 	template <typename FP> static inline void call(FP f, void **, void **a) {
-		(*f)(*reinterpret_cast<RAW_TYPE(typename F::arg1_type) *>(a[1]),
-			 *reinterpret_cast<RAW_TYPE(typename F::arg2_type) *>(a[2]),
-			 *reinterpret_cast<RAW_TYPE(typename F::arg3_type) *>(a[3])
+		(*f)(*reinterpret_cast<_QSP_RAW_TYPE(typename F::arg1_type) *>(a[1]),
+			 *reinterpret_cast<_QSP_RAW_TYPE(typename F::arg2_type) *>(a[2]),
+			 *reinterpret_cast<_QSP_RAW_TYPE(typename F::arg3_type) *>(a[3])
 		);
 	}
 };
@@ -148,20 +148,20 @@ template <typename T, typename F> struct FPSignature<4, T, F> {
 template <typename T, typename F> struct FPCall<4, T, F> {
 	template <typename FP> static inline void call(FP f, void **r, void **a) {
 		typename F::result_type v = (*f)(
-			*reinterpret_cast<RAW_TYPE(typename F::arg1_type) *>(a[1]),
-			*reinterpret_cast<RAW_TYPE(typename F::arg2_type) *>(a[2]),
-			*reinterpret_cast<RAW_TYPE(typename F::arg3_type) *>(a[3]),
-			*reinterpret_cast<RAW_TYPE(typename F::arg4_type) *>(a[4])
+			*reinterpret_cast<_QSP_RAW_TYPE(typename F::arg1_type) *>(a[1]),
+			*reinterpret_cast<_QSP_RAW_TYPE(typename F::arg2_type) *>(a[2]),
+			*reinterpret_cast<_QSP_RAW_TYPE(typename F::arg3_type) *>(a[3]),
+			*reinterpret_cast<_QSP_RAW_TYPE(typename F::arg4_type) *>(a[4])
 		);
-		*r = QMetaType::construct(qMetaTypeId<RAW_TYPE(typename F::result_type)>(), &v);
+		*r = QMetaType::construct(qMetaTypeId<_QSP_RAW_TYPE(typename F::result_type)>(), &v);
 	}
 };
 template <typename F> struct FPCall<4, void, F> {
 	template <typename FP> static inline void call(FP f, void **, void **a) {
-		(*f)(*reinterpret_cast<RAW_TYPE(typename F::arg1_type) *>(a[1]),
-			 *reinterpret_cast<RAW_TYPE(typename F::arg2_type) *>(a[2]),
-			 *reinterpret_cast<RAW_TYPE(typename F::arg3_type) *>(a[3]),
-			 *reinterpret_cast<RAW_TYPE(typename F::arg4_type) *>(a[4])
+		(*f)(*reinterpret_cast<_QSP_RAW_TYPE(typename F::arg1_type) *>(a[1]),
+			 *reinterpret_cast<_QSP_RAW_TYPE(typename F::arg2_type) *>(a[2]),
+			 *reinterpret_cast<_QSP_RAW_TYPE(typename F::arg3_type) *>(a[3]),
+			 *reinterpret_cast<_QSP_RAW_TYPE(typename F::arg4_type) *>(a[4])
 		);
 	}
 };
@@ -172,22 +172,22 @@ template <typename T, typename F> struct FPSignature<5, T, F> {
 template <typename T, typename F> struct FPCall<5, T, F> {
 	template <typename FP> static inline void call(FP f, void **r, void **a) {
 		typename F::result_type v = (*f)(
-			*reinterpret_cast<RAW_TYPE(typename F::arg1_type) *>(a[1]),
-			*reinterpret_cast<RAW_TYPE(typename F::arg2_type) *>(a[2]),
-			*reinterpret_cast<RAW_TYPE(typename F::arg3_type) *>(a[3]),
-			*reinterpret_cast<RAW_TYPE(typename F::arg4_type) *>(a[4]),
-			*reinterpret_cast<RAW_TYPE(typename F::arg5_type) *>(a[5])
+			*reinterpret_cast<_QSP_RAW_TYPE(typename F::arg1_type) *>(a[1]),
+			*reinterpret_cast<_QSP_RAW_TYPE(typename F::arg2_type) *>(a[2]),
+			*reinterpret_cast<_QSP_RAW_TYPE(typename F::arg3_type) *>(a[3]),
+			*reinterpret_cast<_QSP_RAW_TYPE(typename F::arg4_type) *>(a[4]),
+			*reinterpret_cast<_QSP_RAW_TYPE(typename F::arg5_type) *>(a[5])
 		);
-		*r = QMetaType::construct(qMetaTypeId<RAW_TYPE(typename F::result_type)>(), &v);
+		*r = QMetaType::construct(qMetaTypeId<_QSP_RAW_TYPE(typename F::result_type)>(), &v);
 	}
 };
 template <typename F> struct FPCall<5, void, F> {
 	template <typename FP> static inline void call(FP f, void **, void **a) {
-		(*f)(*reinterpret_cast<RAW_TYPE(typename F::arg1_type) *>(a[1]),
-			 *reinterpret_cast<RAW_TYPE(typename F::arg2_type) *>(a[2]),
-			 *reinterpret_cast<RAW_TYPE(typename F::arg3_type) *>(a[3]),
-			 *reinterpret_cast<RAW_TYPE(typename F::arg4_type) *>(a[4]),
-			 *reinterpret_cast<RAW_TYPE(typename F::arg5_type) *>(a[5])
+		(*f)(*reinterpret_cast<_QSP_RAW_TYPE(typename F::arg1_type) *>(a[1]),
+			 *reinterpret_cast<_QSP_RAW_TYPE(typename F::arg2_type) *>(a[2]),
+			 *reinterpret_cast<_QSP_RAW_TYPE(typename F::arg3_type) *>(a[3]),
+			 *reinterpret_cast<_QSP_RAW_TYPE(typename F::arg4_type) *>(a[4]),
+			 *reinterpret_cast<_QSP_RAW_TYPE(typename F::arg5_type) *>(a[5])
 		);
 	}
 };
